@@ -25,7 +25,6 @@ import { authRouter } from 'node-mongoose-auth';
 import mongoose from 'mongoose';
 import AuthRoutes from './routes/Auth.js';
 import { initiateRestore, Stripe } from './stripe.js';
-import { createServer } from 'http';
 import { WebSocketServer } from 'ws';
 import { addActiveUserSession } from './websocket_utils.js';
 // const UserSchema = require("node-mongoose-auth/models/UserSchema").add({permissions : String});

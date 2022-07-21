@@ -30,7 +30,7 @@ import { addActiveUserSession } from './websocket_utils.js';
 // const UserSchema = require("node-mongoose-auth/models/UserSchema").add({permissions : String});
 
 const app = express()
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 4000;
 app.use(cors())
 
 const MONGO_URI = "mongodb+srv://admin:admin@cluster0.loydr.mongodb.net/mongo?retryWrites=true&w=majority"

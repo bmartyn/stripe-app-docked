@@ -10,8 +10,6 @@ import cors from 'cors';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-
-
 // const mongo = require('@metamodules/mongo')().base;
 
 import invoiceRoutes from "./routes/Invoice.js";
@@ -26,8 +24,7 @@ import mongoose from 'mongoose';
 import AuthRoutes from './routes/Auth.js';
 import { initiateRestore, Stripe } from './stripe.js';
 import { WebSocketServer } from 'ws';
-import { addActiveUserSession } from './Websocket_utils.js';
-// const UserSchema = require("node-mongoose-auth/models/UserSchema").add({permissions : String});
+import { addActiveUserSession } from './websocket_utils.js';
 
 const app = express()
 const port = process.env.PORT || 4000;
@@ -35,12 +32,15 @@ app.use(cors())
 
 const MONGO_URI = "mongodb+srv://admin:admin@cluster0.loydr.mongodb.net/mongo?retryWrites=true&w=majority"
 
+console.log(MONGO_URI);
+
 
 mongoose.connect(MONGO_URI, {useNewUrlParser: true, useUnifiedTopology: true}).then(r => {
 
   initiateRestore();
-  
+  console.log("MongoDB Connected")
   app.use('/auth', authRouter);
+  app.use('/users', AuthRoutes);
 
 });
 
@@ -53,8 +53,6 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/invoices', invoiceRoutes);
 app.use('/reports', reportRoutes);
-
-app.use('/user', AuthRoutes);
 
 
 
@@ -142,6 +140,3 @@ server.on('upgrade', async function upgrade(request, socket, head) {      //hand
     }
   });
 });
-
-
-

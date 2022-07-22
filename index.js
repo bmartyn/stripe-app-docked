@@ -24,7 +24,7 @@ import mongoose from 'mongoose';
 import AuthRoutes from './routes/Auth.js';
 import { initiateRestore, Stripe } from './stripe.js';
 import { WebSocketServer } from 'ws';
-import { addActiveUserSession } from './websocket_utils.js';
+import { addActiveUserSession } from './Websocket_utils.js';
 
 const app = express()
 const port = process.env.PORT || 4000;

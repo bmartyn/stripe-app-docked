@@ -338,12 +338,12 @@ router.post('/dashboard/amount', async (req, res) => {
 
     const data = req.body;
 
-    const start = data.start
-    const end = data.end
+    // const start = data.start
+    // const end = data.end
 
     // previous month
-    // let start = moment().subtract(2, "year").startOf("month").startOf("day").unix();
-    // let end = moment().subtract(0, "month").endOf("month").endOf("day").unix();
+    let start = moment().subtract(2, "year").startOf("month").startOf("day").unix();
+    let end = moment().subtract(0, "month").endOf("month").endOf("day").unix();
     
     const aggr = await Invoice.aggregate([
 
@@ -358,6 +358,22 @@ router.post('/dashboard/amount', async (req, res) => {
         },
         {
             $project : {
+                voucher_status : {
+                    $cond : {
+                        if : {
+                                $gte : [
+                                    {
+                                        $size : "$total_discount_amounts"
+                                    },
+                                    1
+                                ]
+                        },
+                        then : '$status',
+                        else : false
+                            
+                    }
+                    
+                },
                 status : {
                     $cond : {
                         if : {
@@ -382,21 +398,32 @@ router.post('/dashboard/amount', async (req, res) => {
                             }
                         }
                             
-                    },
-                    // $cond : {
-                        
-                    // }
+                    }
                     
                 },
-                amount_due : "$amount_due"
+                amount_due : "$amount_due",
+                voucher_discount : {
+                    $subtract : [
+                        "$subtotal_excluding_tax",
+                        "$total_excluding_tax"
+                    ]
+                }
             }
         },
         {
             $group : {
-                "_id": "$status",
+                "_id": {
+                    status : "$status",
+                    voucher_type : "$voucher_status",
+                    
+                },
                 total_amount : {
                     $sum : "$amount_due"
                 },
+                voucher_discount : {
+                    $sum : "$voucher_discount"
+                }
+                
 
             }
         },

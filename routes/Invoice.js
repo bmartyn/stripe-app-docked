@@ -142,6 +142,7 @@ router.post("/update/label/:action", authMiddleware, async (req, res) => {
         const coupon = await Stripe.coupons.create({
           amount_off: parseInt(data.voucher_amount),
           currency: invoice.currency,
+          duration: "once",
         });
         await Stripe.invoices.update(invoice_id, {
           discounts: [{ coupon: coupon.id }],
@@ -163,9 +164,10 @@ router.post("/all-coupans-list", authMiddleware, async (req, res) => {
   const options = {
     limit: data.limit || 5,
   };
+
   const coupans = await Stripe.coupons.list(options);
 
-  return res.formatter.ok(coupans);
+  return res.formatter.ok({ ...coupans, data: coupans.data.filter((coupon) => coupon.duration !== "once") });
 });
 
 export default router;

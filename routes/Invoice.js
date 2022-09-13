@@ -3,7 +3,7 @@ import { authMiddleware } from "node-mongoose-auth/auth.js";
 
 const router = express.Router();
 
-import { Stripe, handleError, setCustomStatus, notPermitted, toTitleCase, setTemporaryStatus } from "../stripe.js";
+import { handleError, notPermitted, setCustomStatus, Stripe, toTitleCase } from "../stripe.js";
 
 router.post("/list", async (req, res) => {
   const data = req.body;
